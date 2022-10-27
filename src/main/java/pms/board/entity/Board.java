@@ -47,7 +47,7 @@ public class Board {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member member;
+    private Member member;	//작성자
 
     public Board update(String title, String content){
         this.title = title;

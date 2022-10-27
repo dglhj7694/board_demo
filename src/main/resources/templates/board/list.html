@@ -21,11 +21,6 @@
                     </colgroup>
                     <thead>
                         <tr>
-                            <th>
-                                <label class="checkbox-inline">
-                                <input type="checkbox" id="allCheckBox" class="chk">
-                                </label>
-                            </th>
                             <th>번호</th>
                             <th>제목</th>
                             <th>작성자</th>
@@ -36,12 +31,8 @@
 
                     <tbody>
                         <tr th:each="list, index : ${list}">
-                            <td>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" class="chk" name="cchk" value="">
-                                </label>
                             <td th:text="${totalCount - (size * number) - index.index}"></td>
-                            <td><a th:text="${list.title}" href=""></a></td>
+                            <td><a th:text="${list.title}" th:href="@{/update/{boardId}(boardId=${list.id})}"></a></td>
                             <td th:text="${list.username}"></td>
                             <td th:text="${#temporals.format(list.regDate, 'yyyy-MM-dd')}"></td>
                             <td th:text="${list.viewCount}"></td>
@@ -51,7 +42,6 @@
                 <br>
 
                 <div class="d-flex justify-content-end">
-                    <a class="btn btn-danger">글삭제</a>
                     <a href="/write" class="btn btn-primary">글쓰기</a>
                 </div>
                 <br>

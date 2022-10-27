@@ -2,14 +2,55 @@ note
 
 == entity==
 
+@Column(nullable = false) 	vs @NotNull
+ddl 에서 not null로 설정되어 테이블 생성
+
 @NoArgsConstructor
 - jpa에서는 생성자를 만들때 파라미터가 없는 생성자를 기본적으로 만들어야 합니다.
  public과 protected로 생성자를 선언할수 있는데, public은 전체 열려있으므로 부분적으로 열려있는 protected를 권장합니다.
   @NoArgsConstructor(access = AccessLevel.PROTECTED)를 사용함으로써 protected로 선언한 생성자 부분을 생략할수 있습니다.
 
-  
+  @EntityListeners
+@EntityListeners 는 엔티티를 DB에 적용하기 전, 이후에 커스텀 콜백을 요청할 수 있는 어노테이션이다.
+@EntityListeners 의 인자로 커스텀 콜백을 요청할 클래스를 지정해주면 되는데,
+ Auditing 을 수행할 때는 JPA 에서 제공하는 AuditingEntityListener.class 를 인자로 넘기면 된다.
+
+ 
 
   ==dto
   
   @QueryProejction
    간단하게 말해 Select 대상을 지정하는것입니다. DTO를 대상으로 하는게 아니라 DTO 기반으로 생성된 QDTO 객체를 대상으로 합니다.
+   
+   
+   ==thymeleaf 
+   
+   *{} : th:object속성과 함께 th:field를 이용해서 HTML 태그에 멤버 변수를 매핑할 수 있다.
+   th:field을 이용한 사용자 입력 필드는 id, name, value 속성 값이 자동으로 매핑된다.
+   
+   ==valid
+  @Valid에서 유효성 체크 후 오류 나는 항목을 return
+  
+  == html 에서 put/delete 매서드 호출 방법
+  https://jaimemin.tisory.com/2098
+  https://aamoos.tistory.com/682
+  
+  
+  ===JPA Auditing
+   Spring Data JPA에서 시간에 대해서 자동으로 값을 넣어주는 기능
+   
+  @CreatedDate, @LastModifiedDate 
+  날짜가 null로 들어가는경우
+	1.Application 파일에 @EnableJpaAuditing 추가
+	2.entity에 위에 @EntityListeners(AuditingEntityListener.class) 선언
+  @EnableJpaAuditing
+  
+  
+  ==multipart 파일 업로드
+  <input type="file" >   
+<form> 태그 method는 POST    
+<form> 태그 enctype=multipart/form-data 
+
+==service
+@Transactional
+Transactional이 붙은 메서드는 메서드가 포함하고 있는 작업 중에 하나라도 실패할 경우 전체 작업을 취소한다.

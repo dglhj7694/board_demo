@@ -34,6 +34,7 @@ public class BoardDto {
         this.content = content;
     }
 
+    //querydsl  Select 대상을 지정
     @QueryProjection
     public BoardDto(Long id, String title, String content, LocalDateTime regDate , LocalDateTime uptDate, Long viewCount, String username){
         this.id = id;
