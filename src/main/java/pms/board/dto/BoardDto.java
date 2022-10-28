@@ -1,8 +1,11 @@
 package pms.board.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.querydsl.core.annotations.QueryProjection;
 
@@ -22,7 +25,9 @@ public class BoardDto {
     private LocalDateTime uptDate;     //수정 날짜
     private Long viewCount;            //조회수
     private String username;            //사용자 이름
-
+    
+    private List<MultipartFile> multipartFile;
+    
     public BoardDto(){
 
     }

@@ -2,6 +2,7 @@ package pms.board.repositoryImpl;
 
 import static pms.board.entity.QBoard.board;
 import static pms.board.entity.QMember.member;
+import static pms.board.entity.QBoardFile.boardFile;
 
 import java.util.List;
 
@@ -14,7 +15,9 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import pms.board.dto.BoardDto;
+import pms.board.dto.BoardFileDto;
 import pms.board.dto.QBoardDto;
+import pms.board.dto.QBoardFileDto;
 import pms.board.repository.CustomBoardRepository;
 
 @Repository
@@ -29,6 +32,7 @@ public class BoardRepositoryImpl implements CustomBoardRepository {
 		this.jpaQueryFactory = jpaQueryFactory;
 	}
 
+	//게시판 목록
 	@Override
 	public Page<BoardDto> selectBoardList(String searchVal, Pageable pageable) {
 		List<BoardDto> content = getBoardMemberDtos(searchVal, pageable);
@@ -36,6 +40,7 @@ public class BoardRepositoryImpl implements CustomBoardRepository {
 		return new PageImpl<>(content, pageable, count);
 	}
 
+	//페이징 count
 	private Long getCount(String searchVal) {
 		// TODO Auto-generated method stub
 		Long count = jpaQueryFactory
@@ -51,6 +56,7 @@ public class BoardRepositoryImpl implements CustomBoardRepository {
 		return searchVal != null ? board.title.contains(searchVal) : null; 
 	}
 
+	//게시판 페이징 목록
 	private List<BoardDto> getBoardMemberDtos(String searchVal, Pageable pageable) {
 		// TODO Auto-generated method stub
 		List<BoardDto> content = jpaQueryFactory
@@ -70,6 +76,25 @@ public class BoardRepositoryImpl implements CustomBoardRepository {
 				.fetch();
 		return content;
 	}
+
+	//게시물 첨부파일 리스트
+	 @Override
+	    public List<BoardFileDto> selectBoardFileDetail(Long boardId) {
+	        List<BoardFileDto> content = jpaQueryFactory
+	                .select(new QBoardFileDto(
+	                         boardFile.file.id
+	                        ,boardFile.file.id
+	                        ,boardFile.file.originFileName
+	                        ,boardFile.file.size
+	                        ,boardFile.file.extension
+	                ))
+	                .from(boardFile)
+	                .leftJoin(boardFile.file)
+	                .where(boardFile.boardId.eq(boardId))
+	                .where(boardFile.delYn.eq("N"))
+	                .fetch();
+	        return content;
+	    }
 
 	
 }

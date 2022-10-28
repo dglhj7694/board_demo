@@ -43,7 +43,6 @@ public class Board {
     private LocalDateTime uptDate;     //수정 날짜
 
     private Long viewCount;     //조회수
-    private String delYn;       //삭제여부
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -55,17 +54,18 @@ public class Board {
         return this;
     }
 
-    public Board delete(String delYn){
-        this.delYn = delYn;
-        return this;
-    }
 
     @Builder
     public Board(String title, String content, Member member){
         this.title = title;
         this.content = content;
         this.viewCount = 0L;
-        this.delYn = "N";
         this.member = member;
+    }
+
+
+    public Board updateViewCount(Long viewCount){
+        this.viewCount = viewCount+1;
+        return this;
     }
 }

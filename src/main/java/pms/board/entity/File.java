@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -17,30 +18,35 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor(access=AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 public class File {
-	
-	@Id @GeneratedValue @Column(name="file_id")
-	private Long id;	//id
-	
-	@Column(nullable = false) 
-	private String originFileName; //원본 파일명
-	
+
+	@Id
+	@GeneratedValue
+	@Column(name = "file_id")
+	private Long id; // id
+
 	@Column(nullable = false)
-	private String savedFileName; //저장된 파일명
-	
-	private String uploadDir;	//경로명
-	
-	private String extension;	//확장자
-	
-	private Long size;	//파일 사이즈
-	
-	private String contentType; //ContentType
-	
+	private String originFileName; // 원본 파일명
+
+	@Column(nullable = false)
+	private String savedFileName; // 저장된 파일명
+
+	private String uploadDir; // 경로명
+
+	private String extension; // 확장자
+
+	private Long size; // 파일 사이즈
+
+	private String contentType; // ContentType
+
 	@CreatedDate
-	private LocalDateTime regDate;	//등록날짜
+	private LocalDateTime regDate; // 등록 날짜
+
+	@OneToOne(mappedBy = "file")
+	private BoardFile boardFile;
 
 	@Builder
 	public File(Long id, String originFileName, String savedFileName, String uploadDir, String extension, Long size,
@@ -53,5 +59,4 @@ public class File {
 		this.size = size;
 		this.contentType = contentType;
 	}
-	
 }
