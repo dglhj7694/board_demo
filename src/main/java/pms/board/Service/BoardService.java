@@ -69,5 +69,9 @@ public class BoardService {
 		}
 	}
 	
+	//삭제
+	public void deleteBoard(Board board) {
+		this.boardRepository.delete(board);
+	}
 	
 }

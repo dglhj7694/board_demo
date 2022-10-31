@@ -49,28 +49,29 @@ public class FileService {
 		//파일 시퀀스 list
 		List<Long> fileIds = new ArrayList<Long>();
 
-		try {
-			if (multipartFile != null) {
-				if (multipartFile.size() > 0 && !multipartFile.get(0).getOriginalFilename().equals("")) {
-					for (MultipartFile file1 : multipartFile) {
-						String originalFileName = file1.getOriginalFilename();
-						String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-						String savedFileName = UUID.randomUUID() + extension;
 
-						File targetFile = new File(uploadDir + savedFileName); // 경로 + 저장파일명(+확장자)
+        try {
+            if (multipartFile != null) {
+                if (multipartFile.size() > 0 && !multipartFile.get(0).getOriginalFilename().equals("")) {
+                    for (MultipartFile file1 : multipartFile) {
+                        String originalFileName = file1.getOriginalFilename();    //오리지날 파일명
+                        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));    //파일 확장자
+                        String savedFileName = UUID.randomUUID() + extension;    //저장될 파일 명
 
-						result.put("result", "FAIL");
+                        File targetFile = new File(uploadDir + savedFileName);
 
-						FileDto fileDto = FileDto
-								.builder()
-								.originFileName(originalFileName)
-								.savedFileName(savedFileName)
-								.uploadDir(savedFileName)
-								.extension(extension)
-								.size(file1.getSize())
-								.contentType(file1.getContentType())
-								.build();
+                        //초기값으로 fail 설정
+                        result.put("result", "FAIL");
 
+                        FileDto fileDto = FileDto.builder()
+                                .originFileName(originalFileName)
+                                .savedFileName(savedFileName)
+                                .uploadDir(uploadDir)
+                                .extension(extension)
+                                .size(file1.getSize())
+                                .contentType(file1.getContentType())
+                                .build();
+                        
 						// insert
 						pms.board.entity.File file = fileDto.toEntity();
 						Long fileId = insertFile(file);

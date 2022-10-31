@@ -24,8 +24,6 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final StringPath content = createString("content");
 
-    public final StringPath delYn = createString("delYn");
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QMember member;

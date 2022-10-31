@@ -26,7 +26,6 @@ import pms.board.repository.CustomBoardRepository;
 public class BoardController {
 
 	private final CustomBoardRepository customBoardRepository;
-	private final BoardRepository boardRepository;
 	private final BoardService boardService;
 	private final FileService fileService;
 	
@@ -42,7 +41,7 @@ public class BoardController {
 		return "board/list";
 	}
 
-	// page 처리 수정해야..
+	// page 처리 
 	private void pageModelPut(Page<BoardDto> results, Model model) {
 		model.addAttribute("totalCount", results.getTotalElements());	
 		model.addAttribute("size", results.getPageable().getPageSize());	
@@ -91,7 +90,7 @@ public class BoardController {
     @GetMapping("/delete/{boardId}")
     public String boardDelete(@PathVariable Long boardId) {
     	Board board = boardService.getBoard(boardId);
-    	this.boardRepository.delete(board);
+    	this.boardService.deleteBoard(board);
         return "redirect:/";
     }
 	

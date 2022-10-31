@@ -57,25 +57,25 @@ public class BoardRepositoryImpl implements CustomBoardRepository {
 	}
 
 	//게시판 페이징 목록
-	private List<BoardDto> getBoardMemberDtos(String searchVal, Pageable pageable) {
-		// TODO Auto-generated method stub
-		List<BoardDto> content = jpaQueryFactory
-				.select(new QBoardDto(
-						board.id
-						,board.title
-						,board.content
-						,board.regDate
-						,board.uptDate
-						,board.viewCount
-						,member.username))
-				.from(board)
-				.leftJoin(board.member, member)
-				.orderBy(board.id.desc())
-				.offset(pageable.getOffset())
-				.limit(pageable.getPageSize())
-				.fetch();
-		return content;
-	}
+	private List<BoardDto> getBoardMemberDtos(String searchVal, Pageable pageable){
+        List<BoardDto> content = jpaQueryFactory
+                .select(new QBoardDto(
+                         board.id
+                        ,board.title
+                        ,board.content
+                        ,board.regDate
+                        ,board.uptDate
+                        ,board.viewCount
+                        ,member.username))
+                .from(board)
+                .leftJoin(board.member, member)
+                .where(containsSearch(searchVal))
+                .orderBy(board.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+        return content;
+    }
 
 	//게시물 첨부파일 리스트
 	 @Override

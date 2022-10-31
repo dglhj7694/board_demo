@@ -32,4 +32,4 @@ logging:
 
   #upload 위치
 upload:
-  path: C:/multipart/file/
+  path: C:/study/file/
