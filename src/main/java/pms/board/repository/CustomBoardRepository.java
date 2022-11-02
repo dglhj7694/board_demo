@@ -7,10 +7,13 @@ import org.springframework.data.domain.Pageable;
 
 import pms.board.dto.BoardDto;
 import pms.board.dto.BoardFileDto;
+import pms.board.entity.Category;
 
 public interface CustomBoardRepository {
-	//게시판 페이징 목록
-	Page<BoardDto> selectBoardList(String searchVal, Pageable pageable);
+	//BoardRepositoryImpl~
+	 
+	//게시판 페이징 처리된 리스트 목록
+	Page<BoardDto> selectBoardList(String searchVal, Pageable pageable, Category category);
 
 	//게시판 상세 첨부파일 조회
 	List<BoardFileDto> selectBoardFileDetail(Long boardId);

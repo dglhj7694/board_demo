@@ -18,6 +18,7 @@ import pms.board.dto.BoardDto;
 import pms.board.dto.BoardFileDto;
 import pms.board.dto.QBoardDto;
 import pms.board.dto.QBoardFileDto;
+import pms.board.entity.Category;
 import pms.board.repository.CustomBoardRepository;
 
 @Repository
@@ -34,15 +35,14 @@ public class BoardRepositoryImpl implements CustomBoardRepository {
 
 	//게시판 목록
 	@Override
-	public Page<BoardDto> selectBoardList(String searchVal, Pageable pageable) {
-		List<BoardDto> content = getBoardMemberDtos(searchVal, pageable);
+	public Page<BoardDto> selectBoardList(String searchVal, Pageable pageable, Category category) {
+		List<BoardDto> content = getBoardDtos(searchVal, pageable, category);
 		Long count = getCount(searchVal);
 		return new PageImpl<>(content, pageable, count);
 	}
 
 	//페이징 count
 	private Long getCount(String searchVal) {
-		// TODO Auto-generated method stub
 		Long count = jpaQueryFactory
 				.select(board.count())
 				.from(board)
@@ -57,11 +57,12 @@ public class BoardRepositoryImpl implements CustomBoardRepository {
 	}
 
 	//게시판 페이징 목록
-	private List<BoardDto> getBoardMemberDtos(String searchVal, Pageable pageable){
+	private List<BoardDto> getBoardDtos(String searchVal, Pageable pageable, Category category){
         List<BoardDto> content = jpaQueryFactory
                 .select(new QBoardDto(
                          board.id
                         ,board.title
+                        ,board.category
                         ,board.content
                         ,board.regDate
                         ,board.uptDate
@@ -70,6 +71,7 @@ public class BoardRepositoryImpl implements CustomBoardRepository {
                 .from(board)
                 .leftJoin(board.member, member)
                 .where(containsSearch(searchVal))
+                .where(board.category.eq(category))
                 .orderBy(board.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -96,5 +98,6 @@ public class BoardRepositoryImpl implements CustomBoardRepository {
 	        return content;
 	    }
 
-	
+	//공지 게시판 리스트 조회
+	//업무 게시판 리스트 조회
 }

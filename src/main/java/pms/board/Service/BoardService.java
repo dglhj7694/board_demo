@@ -39,7 +39,7 @@ public class BoardService {
 		//update
 		else {
             board = boardRepository.findById(boardDto.getId()).get();
-			board.update(boardDto.getTitle(), boardDto.getContent());
+			board.update(boardDto.getTitle(),boardDto.getCategory(), boardDto.getContent());
 		}
 		
 		//파일 저장

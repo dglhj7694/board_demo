@@ -8,17 +8,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import pms.board.Service.BoardService;
 import pms.board.Service.FileService;
 import pms.board.dto.BoardDto;
 import pms.board.entity.Board;
-import pms.board.repository.BoardRepository;
+import pms.board.entity.Category;
 import pms.board.repository.CustomBoardRepository;
 
 @Controller
@@ -29,18 +33,46 @@ public class BoardController {
 	private final BoardService boardService;
 	private final FileService fileService;
 	
-	/* list
-	 * 게시글 목록화면 */
+	//카테고리 리스트 > write/ update 화면에
+	@ModelAttribute("categorys")
+	public Category[] categorys() {
+			return Category.values(); // 해당 ENUM의 모든 정보를 배열로 반환한다. 
+	}
+
 	@GetMapping("/")
-	public String list(String searchVal, Pageable pageable, Model model) {
-		Page<BoardDto> results = customBoardRepository.selectBoardList(searchVal, pageable);
-		model.addAttribute("list", results);
-		model.addAttribute("maxPage", 5);
-		model.addAttribute("searchVal", searchVal);
+	public String main() {
+		return "views/content";
+	}
+	
+	/* list
+	 * 공지 게시판 목록화면 */
+	@GetMapping("/notice")
+	public String noticeList(String searchVal, Pageable pageable, Model model) {
+		Category category = Category.NOTICE;
+		Page<BoardDto> results = customBoardRepository.selectBoardList(searchVal, pageable, category);
+		boardModelPut(results, model, searchVal, pageable, category);
 		pageModelPut(results, model);
 		return "board/list";
 	}
-
+	
+	//업무 게시판 목록화면
+	@GetMapping("/work")
+	public String workList(String searchVal, Pageable pageable, Model model) {
+		Category category = Category.WORK;
+		Page<BoardDto> results = customBoardRepository.selectBoardList(searchVal, pageable, category);
+		boardModelPut(results, model, searchVal, pageable, category);
+		pageModelPut(results, model);
+		return "board/list";
+	}
+	 	
+	//board처리
+	private void boardModelPut(Page<BoardDto> results, Model model, String searchVal, Pageable pageable, Category category) {
+		model.addAttribute("list", results);
+		model.addAttribute("maxPage", 5);
+		model.addAttribute("searchVal", searchVal);
+		model.addAttribute("category", category);
+	}
+	
 	// page 처리 
 	private void pageModelPut(Page<BoardDto> results, Model model) {
 		model.addAttribute("totalCount", results.getTotalElements());	
@@ -53,6 +85,7 @@ public class BoardController {
     @GetMapping("/write")
     public String write(Model model){
         model.addAttribute("boardDto", new BoardDto());
+        
         return "board/write";
     }
 
@@ -65,7 +98,11 @@ public class BoardController {
 			return "board/write";
 		}
 		boardService.saveBoard(boardDto);
-		return "redirect:/";
+		
+		if (boardDto.getCategory()==Category.NOTICE) {
+			return "redirect:/notice";
+		}
+		return "redirect:/work";
 	}
 
 	/* update (get)
@@ -86,6 +123,22 @@ public class BoardController {
 		return "board/update";
 	}
 	
+	@GetMapping("/detail/{boardId}")
+	public String detail(@PathVariable Long boardId, Model model) {
+		Board board = boardService.selectBoardDetail(boardId);
+
+		BoardDto boardDto = BoardDto.builder()
+				.id(boardId)
+				.title(board.getTitle())
+				.category(board.getCategory())
+				.content(board.getContent())
+				.build();
+		
+		model.addAttribute("boardDto",boardDto);	//th:object="${boardDto}"
+		model.addAttribute("boardFile", customBoardRepository.selectBoardFileDetail(boardId));
+		
+		return "board/detail";
+	}
 	
     @GetMapping("/delete/{boardId}")
     public String boardDelete(@PathVariable Long boardId) {

@@ -1,6 +1,7 @@
 package pms.board;
 
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import pms.board.entity.Authority;
+import pms.board.entity.Board;
+import pms.board.entity.Category;
 import pms.board.entity.Member;
 import pms.board.repository.BoardRepository;
 import pms.board.repository.MemberRepository;
@@ -36,6 +39,7 @@ public class InitDB {
         public void userDBInit(){
 
             List<Member> memberList = memberRepository.findAll();
+            List<Board> boardList = boardRepository.findAll();
             if(memberList.size() == 0){
                 Member member = Member.builder()
                         .username("관리자")
@@ -46,6 +50,25 @@ public class InitDB {
                 //member 저장
                 memberRepository.save(member);
             }
+//            if (boardList.size()==0) {
+//            	for (int i = 0; i < 10; i++) {
+//    				Board board = Board.builder()
+//    						.title("title"+i)
+//    						.content("content"+i)
+//    						.category(Category.NOTICE)
+//    						.build();
+//                	boardRepository.save(board);
+//
+//				}
+//            	for (int i = 0; i < 9; i++) {
+//    				Board board = Board.builder()
+//    						.title("title"+i)
+//    						.content("content"+i)
+//    						.category(Category.WORK)
+//    						.build();
+//                	boardRepository.save(board);
+//				}
+//			}
         }
     }
 }

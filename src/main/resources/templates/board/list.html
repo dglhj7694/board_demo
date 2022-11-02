@@ -7,10 +7,14 @@
             <br>
             <div class="input-group">
                 <input type="text" name="searchVal" th:value="${searchVal}" class="form-control"
-                       placeholder="제목을 입력해주세요.">
+                       placeholder="검색할 제목을 입력해주세요.">
                 <button type="submit" class="btn btn-secondary">검색</button>
             </div>
             <br>
+            <div>
+                <span th:if="${category.toString().equals('NOTICE')}">공 지 게 시 판</span>
+                <span th:if="${category.toString().equals('WORK')}">업 무 게 시 판</span>
+            </div>
             <table class="table table-hover">
                 <colgroup>
                     <col width="5%"/>
@@ -36,7 +40,7 @@
 
                 <tr th:each="list, index : ${list}">
                     <td th:text="${totalCount - (size * number) - index.index}"></td>
-                    <td><a th:text="${list.title}" th:href="@{/update/{boardId}(boardId=${list.id})}"></a></td>
+                    <td><a th:text="${list.title}" th:href="@{/detail/{boardId}(boardId=${list.id})}"></a></td>
                     <td th:text="${list.username}"></td>
                     <td th:text="${#temporals.format(list.regDate, 'yyyy-MM-dd')}"></td>
                     <td th:text="${list.viewCount}"></td>

@@ -43,6 +43,10 @@ public class BoardFileDto {
 	}
 
 	public BoardFile toEntity(File file) {
-		return BoardFile.builder().boardId(boardId).file(file).build();
+		return BoardFile
+				.builder()
+				.boardId(boardId)
+				.file(file)
+				.build();
 	}
 }
