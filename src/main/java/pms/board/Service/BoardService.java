@@ -6,9 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import lombok.RequiredArgsConstructor;
-import pms.board.DataNotFoundException;
 import pms.board.dto.BoardDto;
 import pms.board.entity.Board;
 import pms.board.entity.Member;
@@ -53,25 +51,33 @@ public class BoardService {
 	 * selectBoardDetail 
 	 * 상세조회
 	 */
-	public Board selectBoardDetail(Long id) {
-	    Board board = boardRepository.findById(id).get();
-	    board.updateViewCount(board.getViewCount());
-	    boardRepository.save(board);
-		return board;
-	}
+//	public Board selectBoardDetail(Long id) {
+//	    Board board = boardRepository.findById(id).get();
+//	    board.updateViewCount(board.getViewCount());
+//	    boardRepository.save(board);
+//		return board;
+//	}
 
-	public Board getBoard(Long boardId) {
-		Optional<Board> board = boardRepository.findById(boardId);
-		if (board.isPresent()) {
-			return board.get();
-		}else {
-			throw new DataNotFoundException("board not found");
-		}
+	public BoardDto getBoard(Long boardId) {
+		Optional<Board> getBoard = boardRepository.findById(boardId);
+		Board board = getBoard.get();
+	    board.updateViewCount(board.getViewCount());
+	    boardRepository.save(board);	//조회수 저장
+
+		BoardDto boardDto = BoardDto.builder()
+		.id(boardId)
+		.title(board.getTitle())
+		.category(board.getCategory())
+		.content(board.getContent()).build();
+		
+		return boardDto;
 	}
 	
 	//삭제
-	public void deleteBoard(Board board) {
+	public void deleteBoard(Long boardId) {
+		Board board = boardRepository.findById(boardId).get();
 		this.boardRepository.delete(board);
 	}
 	
+
 }

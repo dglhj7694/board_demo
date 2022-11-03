@@ -50,25 +50,25 @@ public class InitDB {
                 //member 저장
                 memberRepository.save(member);
             }
-//            if (boardList.size()==0) {
-//            	for (int i = 0; i < 10; i++) {
-//    				Board board = Board.builder()
-//    						.title("title"+i)
-//    						.content("content"+i)
-//    						.category(Category.NOTICE)
-//    						.build();
-//                	boardRepository.save(board);
-//
-//				}
-//            	for (int i = 0; i < 9; i++) {
-//    				Board board = Board.builder()
-//    						.title("title"+i)
-//    						.content("content"+i)
-//    						.category(Category.WORK)
-//    						.build();
-//                	boardRepository.save(board);
-//				}
-//			}
+            if (boardList.size()==0) {
+            	for (int i = 0; i < 21; i++) {
+    				Board board = Board.builder()
+    						.title("공지"+i)
+    						.content("content"+i)
+    						.category(Category.NOTICE)
+    						.build();
+                	boardRepository.save(board);
+
+				}
+            	for (int i = 0; i < 43; i++) {
+    				Board board = Board.builder()
+    						.title("업무"+i)
+    						.content("content"+i)
+    						.category(Category.WORK)
+    						.build();
+                	boardRepository.save(board);
+				}
+			}
         }
     }
 }

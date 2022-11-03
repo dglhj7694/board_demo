@@ -37,16 +37,17 @@ public class BoardRepositoryImpl implements CustomBoardRepository {
 	@Override
 	public Page<BoardDto> selectBoardList(String searchVal, Pageable pageable, Category category) {
 		List<BoardDto> content = getBoardDtos(searchVal, pageable, category);
-		Long count = getCount(searchVal);
+		Long count = getCount(searchVal,category);
 		return new PageImpl<>(content, pageable, count);
 	}
 
 	//페이징 count
-	private Long getCount(String searchVal) {
+	private Long getCount(String searchVal, Category category) {
 		Long count = jpaQueryFactory
 				.select(board.count())
 				.from(board)
 				.where(containsSearch(searchVal))
+				.where(board.category.eq(category))
 				.fetchOne();
 		return count;
 	}
@@ -73,8 +74,8 @@ public class BoardRepositoryImpl implements CustomBoardRepository {
                 .where(containsSearch(searchVal))
                 .where(board.category.eq(category))
                 .orderBy(board.id.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())	//페이지 번호 (0부터 시작)
+                .limit(pageable.getPageSize())	//페이지 사이즈
                 .fetch();
         return content;
     }

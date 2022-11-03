@@ -59,14 +59,14 @@
                 <ul class="pagination">
 
                     <li th:if="${start > 1}" class="page-item">
-                        <a th:href="@{/?(page=0, searchVal=${searchVal})}" class="page-link" href="#"
+                        <a th:href="@{/work/?(page=0, searchVal=${searchVal})}" class="page-link" href="#"
                            aria-label="Previous">
                             <span aria-hidden="true">&laquo;&laquo;</span>
                         </a>
                     </li>
 
                     <li th:if="${start > 1}" class="page-item">
-                        <a th:href="@{/?(page=${start - maxPage-1}, searchVal=${searchVal})}" class="page-link" href="#"
+                        <a th:href="@{/work/?(page=${start - maxPage-1}, searchVal=${searchVal})}" class="page-link" href="#"
                            aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
@@ -74,19 +74,19 @@
 
                     <li th:each="page: ${#numbers.sequence(start, end)}" class="page-item"
                         th:classappend="${list.number+1 == page} ? active">
-                        <a th:href="@{/?(page=${page-1}, searchVal=${searchVal})}" th:text="${page}" class="page-link"
+                        <a th:href="@{/work/?(page=${page-1}, searchVal=${searchVal})}" th:text="${page}" class="page-link"
                            href="#">1</a>
                     </li>
 
                     <li th:if="${end < list.totalPages}" class="page-item">
-                        <a th:href="@{/?(page=${start + maxPage -1}, searchVal=${searchVal})}" class="page-link"
+                        <a th:href="@{/work/?(page=${start + maxPage -1}, searchVal=${searchVal})}" class="page-link"
                            href="#" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
 
                     <li th:if="${end < list.totalPages}" class="page-item">
-                        <a th:href="@{/?(page=${list.totalPages-1}, searchVal=${searchVal})}" class="page-link" href="#"
+                        <a th:href="@{/work/?(page=${list.totalPages-1}, searchVal=${searchVal})}" class="page-link" href="#"
                            aria-label="Next">
                             <span aria-hidden="true">&raquo;&raquo;</span>
                         </a>
