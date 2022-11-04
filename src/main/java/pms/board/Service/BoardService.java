@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import pms.board.dto.BoardFileDto;
+import pms.board.dto.BoardFileResponseDto;
 import pms.board.dto.BoardRequestDto;
 import pms.board.dto.BoardResponseDto;
 import pms.board.entity.Board;
@@ -82,7 +82,7 @@ public class BoardService {
 	}
 	
 	//첨부파일 불러오기
-	public List<BoardFileDto> getFile(Long boardId) {
+	public List<BoardFileResponseDto> getFile(Long boardId) {
 		return customBoardRepository.selectBoardFileDetail(boardId);
 	}
 	

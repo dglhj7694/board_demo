@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import pms.board.dto.BoardFileDto;
+import pms.board.dto.BoardFileRequestDto;
 import pms.board.dto.BoardRequestDto;
 import pms.board.dto.FileDto;
 import pms.board.entity.BoardFile;
@@ -43,8 +44,8 @@ public class FileService {
 	 * @Method : saveFile
 	 */
 	@Transactional
-	public Map<String, Object> saveFile(BoardRequestDto boardDto, Long boardId) throws Exception {
-		List<MultipartFile> multipartFile = boardDto.getMultipartFile();
+	public Map<String, Object> saveFile(BoardRequestDto boardRequestDto, Long boardId) throws Exception {
+		List<MultipartFile> multipartFile = boardRequestDto.getMultipartFile();
 
 		//결과 map
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -98,11 +99,10 @@ public class FileService {
 							break;
 
 						}
-						BoardFileDto boardFileDto = BoardFileDto.builder()
+						BoardFileRequestDto boardFileRequestDto = BoardFileRequestDto.builder()
 								.boardId(boardId)
 								.build();
-						
-						BoardFile boardFile = boardFileDto.toEntity(file);
+						BoardFile boardFile = boardFileRequestDto.toEntity(file);
 						insertBoardFile(boardFile);
 					}
 				}

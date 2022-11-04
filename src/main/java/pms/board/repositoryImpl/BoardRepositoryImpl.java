@@ -14,9 +14,9 @@ import org.springframework.stereotype.Repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import pms.board.dto.BoardFileDto;
+import pms.board.dto.BoardFileResponseDto;
 import pms.board.dto.BoardResponseDto;
-import pms.board.dto.QBoardFileDto;
+import pms.board.dto.QBoardFileResponseDto;
 import pms.board.dto.QBoardResponseDto;
 import pms.board.entity.Category;
 import pms.board.repository.CustomBoardRepository;
@@ -82,9 +82,9 @@ public class BoardRepositoryImpl implements CustomBoardRepository {
 
 	//게시물 첨부파일 리스트
 	 @Override
-	    public List<BoardFileDto> selectBoardFileDetail(Long boardId) {
-	        List<BoardFileDto> content = jpaQueryFactory
-	                .select(new QBoardFileDto(
+	    public List<BoardFileResponseDto> selectBoardFileDetail(Long boardId) {
+	        List<BoardFileResponseDto> content = jpaQueryFactory
+	                .select(new QBoardFileResponseDto(
 	                         boardFile.file.id
 	                        ,boardFile.file.id
 	                        ,boardFile.file.originFileName
@@ -98,7 +98,4 @@ public class BoardRepositoryImpl implements CustomBoardRepository {
 	                .fetch();
 	        return content;
 	    }
-
-	//공지 게시판 리스트 조회
-	//업무 게시판 리스트 조회
 }

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import lombok.RequiredArgsConstructor;
 import pms.board.Service.BoardService;
 import pms.board.Service.FileService;
-import pms.board.dto.BoardFileDto;
+import pms.board.dto.BoardFileResponseDto;
 import pms.board.dto.BoardRequestDto;
 import pms.board.dto.BoardResponseDto;
 import pms.board.entity.Category;
@@ -105,7 +105,7 @@ public class BoardController {
 	@GetMapping("/write")
 	public String write(Model model) {
 		//response
-		model.addAttribute("boardDto", new BoardResponseDto());
+		model.addAttribute("boardRequestDto", new BoardResponseDto());
 
 		return "board/write";
 	}
@@ -135,9 +135,9 @@ public class BoardController {
 	@GetMapping("/update/{boardId}")
 	public String update(@PathVariable Long boardId, Model model) {
 		BoardResponseDto boardResponseDto = boardService.getBoard(boardId);
-		List<BoardFileDto> boardFileDto = boardService.getFile(boardId);
+		List<BoardFileResponseDto> boardFileResponseDto = boardService.getFile(boardId);
 		model.addAttribute("boardDto", boardResponseDto); // th:object="${boardDto}"
-		model.addAttribute("boardFile", boardFileDto);
+		model.addAttribute("boardFile", boardFileResponseDto);
 		return "board/update";
 	}
 
@@ -166,8 +166,8 @@ public class BoardController {
 	public String detail(@PathVariable Long boardId, Model model) {
 		//response
 		BoardResponseDto boardResponseDto = boardService.getBoard(boardId);
-		List<BoardFileDto> boardFileDto = boardService.getFile(boardId);
-		model.addAttribute("boardFile", boardFileDto);
+		List<BoardFileResponseDto> boardFileResponseDto = boardService.getFile(boardId);
+		model.addAttribute("boardFile", boardFileResponseDto);
 		model.addAttribute("boardDto", boardResponseDto); // th:object="${boardDto}"
 
 		return "board/detail";
