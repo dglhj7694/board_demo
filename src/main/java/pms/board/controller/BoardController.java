@@ -127,15 +127,7 @@ public class BoardController {
 	 */
 	@GetMapping("/update/{boardId}")
 	public String update(@PathVariable Long boardId, Model model) {
-//		Board board = boardService.selectBoardDetail(boardId);
 		BoardDto boardDto = boardService.getBoard(boardId);
-
-//		BoardDto boardDto = BoardDto.builder()
-//				.id(boardId)
-//				.title(board.getTitle())
-//				.content(board.getContent())
-//				.build();
-
 		model.addAttribute("boardDto", boardDto); // th:object="${boardDto}"
 		model.addAttribute("boardFile", customBoardRepository.selectBoardFileDetail(boardId));
 
@@ -166,14 +158,6 @@ public class BoardController {
 	@GetMapping("/detail/{boardId}")
 	public String detail(@PathVariable Long boardId, Model model) {
 		BoardDto boardDto = boardService.getBoard(boardId);
-		
-//		Board board = boardService.selectBoardDetail(boardId);
-//
-//		BoardDto boardDto = BoardDto.builder()
-//				.id(boardId)
-//				.title(board.getTitle())
-//				.category(board.getCategory())
-//				.content(board.getContent()).build();
 		model.addAttribute("boardDto", boardDto); // th:object="${boardDto}"
 		model.addAttribute("boardFile", customBoardRepository.selectBoardFileDetail(boardId));
 
@@ -203,9 +187,7 @@ public class BoardController {
 	 */
 	@PostMapping("/boardFileDelete")
 	public String boardFileDelete(@RequestParam Long fileId, @RequestParam Long boardId) {
-
-		// 게시판 파일삭제
-		fileService.deleteBoardFile(fileId);
+		fileService.deleteBoardFile(fileId); //파일삭제
 		return "redirect:/update/" + boardId;
 	}
 

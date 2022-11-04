@@ -51,7 +51,7 @@ public class InitDB {
                 memberRepository.save(member);
             }
             if (boardList.size()==0) {
-            	for (int i = 0; i < 21; i++) {
+            	for (int i = 1; i <= 21; i++) {
     				Board board = Board.builder()
     						.title("공지"+i)
     						.content("content"+i)
@@ -60,7 +60,7 @@ public class InitDB {
                 	boardRepository.save(board);
 
 				}
-            	for (int i = 0; i < 43; i++) {
+            	for (int i = 1; i <= 43; i++) {
     				Board board = Board.builder()
     						.title("업무"+i)
     						.content("content"+i)

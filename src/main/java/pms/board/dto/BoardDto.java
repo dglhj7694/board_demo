@@ -28,13 +28,13 @@ public class BoardDto {
 	private LocalDateTime uptDate; // 수정 날짜
 	private Long viewCount; // 조회수
 	private String username; // 사용자 이름
-
 	private List<MultipartFile> multipartFile;
 
 	public BoardDto() {
 
 	}
 
+	//response
 	@Builder
 	public BoardDto(Long id, String title, Category category, String content) {
 		this.id = id;
@@ -43,6 +43,7 @@ public class BoardDto {
 		this.content = content;
 	}
 
+	//response
 	// querydsl Select 대상을 지정
 	@QueryProjection
 	public BoardDto(Long id, String title, Category category, String content, LocalDateTime regDate, LocalDateTime uptDate, Long viewCount,
@@ -57,6 +58,7 @@ public class BoardDto {
 		this.username = username;
 	}
 
+	//request
 	public Board toEntity(Member member) {
 		return Board
 				.builder()

@@ -36,7 +36,7 @@ public class FileController {
 		//System.out.println("fileInfo.getUploadDir()" + fileInfo.getUploadDir());
 		//System.err.println("filePath :" + saveFilePath);
 		// 해당 경로에 파일이 없으면
-		if (!saveFilePath.toFile().exists()) {
+		if (!saveFilePath.toFile().exists()) {	//경로를 파일객체로 변환 존재여부
 			throw new RuntimeException("file not found");
 		}
 
@@ -67,8 +67,8 @@ public class FileController {
 
 		try {
 			fis = new FileInputStream(saveFilePath.toFile());
-			FileCopyUtils.copy(fis, res.getOutputStream());
-			res.getOutputStream().flush();
+			FileCopyUtils.copy(fis, res.getOutputStream());	//복사
+			res.getOutputStream().flush();	//버퍼 비우기
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
