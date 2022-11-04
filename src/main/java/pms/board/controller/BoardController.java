@@ -1,5 +1,7 @@
 package pms.board.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -17,15 +19,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import lombok.RequiredArgsConstructor;
 import pms.board.Service.BoardService;
 import pms.board.Service.FileService;
-import pms.board.dto.BoardDto;
+import pms.board.dto.BoardFileDto;
+import pms.board.dto.BoardRequestDto;
+import pms.board.dto.BoardResponseDto;
 import pms.board.entity.Category;
-import pms.board.repository.CustomBoardRepository;
 
 @Controller
 @RequiredArgsConstructor
 public class BoardController {
 
-	private final CustomBoardRepository customBoardRepository;
+//	private final CustomBoardRepository customBoardRepository;
 	private final BoardService boardService;
 	private final FileService fileService;
 
@@ -51,7 +54,9 @@ public class BoardController {
 	@GetMapping("/notice")
 	public String noticeList(String searchVal, Pageable pageable, Model model) {
 		Category category = Category.NOTICE;
-		Page<BoardDto> results = customBoardRepository.selectBoardList(searchVal, pageable, category);
+		//response con>>view
+//		Page<BoardResponseDto> results = customBoardRepository.selectBoardList(searchVal, pageable, category);
+		Page<BoardResponseDto> results = boardService.selectBoardList(searchVal, pageable, category);
 		boardModelPut(results, model, searchVal, pageable, category);
 		pageModelPut(results, model);
 		return "board/notice";
@@ -64,7 +69,8 @@ public class BoardController {
 	@GetMapping("/work")
 	public String workList(String searchVal, Pageable pageable, Model model) {
 		Category category = Category.WORK;
-		Page<BoardDto> results = customBoardRepository.selectBoardList(searchVal, pageable, category);
+//		Page<BoardResponseDto> results = customBoardRepository.selectBoardList(searchVal, pageable, category);
+		Page<BoardResponseDto> results = boardService.selectBoardList(searchVal, pageable, category);
 		boardModelPut(results, model, searchVal, pageable, category);
 		pageModelPut(results, model);
 		return "board/work";
@@ -75,7 +81,7 @@ public class BoardController {
 	 * workList > board 처리
 	 * @Method : boardModelPut
 	 */
-	private void boardModelPut(Page<BoardDto> results, Model model, String searchVal, Pageable pageable, Category category) {
+	private void boardModelPut(Page<BoardResponseDto> results, Model model, String searchVal, Pageable pageable, Category category) {
 		model.addAttribute("list", results);
 		model.addAttribute("maxPage", 5);
 		model.addAttribute("searchVal", searchVal);
@@ -86,7 +92,7 @@ public class BoardController {
 	 * workList > page처리
 	 * @Method : pageModelPut
 	 */
-	private void pageModelPut(Page<BoardDto> results, Model model) {
+	private void pageModelPut(Page<BoardResponseDto> results, Model model) {
 		model.addAttribute("totalCount", results.getTotalElements());
 		model.addAttribute("size", results.getPageable().getPageSize());	//페이지별	사이즈
 		model.addAttribute("number", results.getPageable().getPageNumber());	//현재페이지 번호
@@ -98,7 +104,8 @@ public class BoardController {
 	 */
 	@GetMapping("/write")
 	public String write(Model model) {
-		model.addAttribute("boardDto", new BoardDto());
+		//response
+		model.addAttribute("boardDto", new BoardResponseDto());
 
 		return "board/write";
 	}
@@ -108,14 +115,14 @@ public class BoardController {
 	 * @Method : save
 	 */
 	@PostMapping("/write")
-	public String save(@Valid BoardDto boardDto, BindingResult result) throws Exception {
+	public String save(@Valid BoardRequestDto boardRequestDto, BindingResult result) throws Exception {
 		// 유효성 검사
 		if (result.hasErrors()) { // 오류가 있을경우 다시 글쓰기 화면으로
 			return "board/write";
 		}
-		boardService.saveBoard(boardDto);
+		boardService.saveBoard(boardRequestDto);
 
-		if (boardDto.getCategory() == Category.NOTICE) {
+		if (boardRequestDto.getCategory() == Category.NOTICE) {
 			return "redirect:/notice";
 		}
 		return "redirect:/work";
@@ -127,10 +134,10 @@ public class BoardController {
 	 */
 	@GetMapping("/update/{boardId}")
 	public String update(@PathVariable Long boardId, Model model) {
-		BoardDto boardDto = boardService.getBoard(boardId);
-		model.addAttribute("boardDto", boardDto); // th:object="${boardDto}"
-		model.addAttribute("boardFile", customBoardRepository.selectBoardFileDetail(boardId));
-
+		BoardResponseDto boardResponseDto = boardService.getBoard(boardId);
+		List<BoardFileDto> boardFileDto = boardService.getFile(boardId);
+		model.addAttribute("boardDto", boardResponseDto); // th:object="${boardDto}"
+		model.addAttribute("boardFile", boardFileDto);
 		return "board/update";
 	}
 
@@ -139,13 +146,13 @@ public class BoardController {
 	 * @Method : update
 	 */
 	@PutMapping("/update/{boardId}")
-	public String update(@Valid BoardDto boardDto, BindingResult result) throws Exception {
+	public String update(@Valid BoardRequestDto boardRequestDto, BindingResult result) throws Exception {
 		// 유효성검사
 		if (result.hasErrors()) {
 			return "board/update";
 		}
-		boardService.saveBoard(boardDto);
-		if (boardDto.getCategory() == Category.NOTICE) {
+		boardService.saveBoard(boardRequestDto);
+		if (boardRequestDto.getCategory() == Category.NOTICE) {
 			return "redirect:/notice";
 		}
 		return "redirect:/work";
@@ -157,9 +164,11 @@ public class BoardController {
 	 */
 	@GetMapping("/detail/{boardId}")
 	public String detail(@PathVariable Long boardId, Model model) {
-		BoardDto boardDto = boardService.getBoard(boardId);
-		model.addAttribute("boardDto", boardDto); // th:object="${boardDto}"
-		model.addAttribute("boardFile", customBoardRepository.selectBoardFileDetail(boardId));
+		//response
+		BoardResponseDto boardResponseDto = boardService.getBoard(boardId);
+		List<BoardFileDto> boardFileDto = boardService.getFile(boardId);
+		model.addAttribute("boardFile", boardFileDto);
+		model.addAttribute("boardDto", boardResponseDto); // th:object="${boardDto}"
 
 		return "board/detail";
 	}
@@ -170,9 +179,9 @@ public class BoardController {
 	 */
 	@GetMapping("/delete/{boardId}")
 	public String boardDelete(@PathVariable Long boardId) {
-		BoardDto boardDto = boardService.getBoard(boardId);
+		BoardResponseDto boardResponseDto = boardService.getBoard(boardId);
 		boardService.deleteBoard(boardId);
-		if (boardDto.getCategory() == Category.NOTICE) {
+		if (boardResponseDto.getCategory() == Category.NOTICE) {
 			return "redirect:/notice";
 		}
 		return "redirect:/work";

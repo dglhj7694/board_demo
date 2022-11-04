@@ -1,8 +1,8 @@
 package pms.board.repositoryImpl;
 
 import static pms.board.entity.QBoard.board;
-import static pms.board.entity.QMember.member;
 import static pms.board.entity.QBoardFile.boardFile;
+import static pms.board.entity.QMember.member;
 
 import java.util.List;
 
@@ -14,10 +14,10 @@ import org.springframework.stereotype.Repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import pms.board.dto.BoardDto;
 import pms.board.dto.BoardFileDto;
-import pms.board.dto.QBoardDto;
+import pms.board.dto.BoardResponseDto;
 import pms.board.dto.QBoardFileDto;
+import pms.board.dto.QBoardResponseDto;
 import pms.board.entity.Category;
 import pms.board.repository.CustomBoardRepository;
 
@@ -35,8 +35,8 @@ public class BoardRepositoryImpl implements CustomBoardRepository {
 
 	//게시판 목록
 	@Override
-	public Page<BoardDto> selectBoardList(String searchVal, Pageable pageable, Category category) {
-		List<BoardDto> content = getBoardDtos(searchVal, pageable, category);
+	public Page<BoardResponseDto> selectBoardList(String searchVal, Pageable pageable, Category category) {
+		List<BoardResponseDto> content = getBoardDtos(searchVal, pageable, category);
 		Long count = getCount(searchVal,category);
 		return new PageImpl<>(content, pageable, count);
 	}
@@ -58,9 +58,9 @@ public class BoardRepositoryImpl implements CustomBoardRepository {
 	}
 
 	//게시판 페이징 목록
-	private List<BoardDto> getBoardDtos(String searchVal, Pageable pageable, Category category){
-        List<BoardDto> content = jpaQueryFactory
-                .select(new QBoardDto(
+	private List<BoardResponseDto> getBoardDtos(String searchVal, Pageable pageable, Category category){
+        List<BoardResponseDto> content = jpaQueryFactory
+                .select(new QBoardResponseDto(
                          board.id
                         ,board.title
                         ,board.category

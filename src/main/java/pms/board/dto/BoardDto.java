@@ -19,7 +19,6 @@ import pms.board.entity.Member;
 public class BoardDto {
 
 	private Long id; // 시퀀스
-
 	@NotEmpty(message = "제목은 필수입니다.")
 	private String title; // 제목
 	private Category category; // 카테고리

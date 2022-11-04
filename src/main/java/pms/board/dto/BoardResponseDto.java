@@ -46,4 +46,8 @@ public class BoardResponseDto {
 		this.viewCount = viewCount;
 		this.username = username;
 	}
+
+	public BoardResponseDto() {
+		
+	}
 }
